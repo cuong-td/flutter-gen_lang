@@ -4,8 +4,6 @@ import 'package:gen_lang/extra_json_message_tool.dart';
 String generateMessageAllDart(
     String createdMessageLookup, String deferredLibraries, String findExacts) {
   return '''
-// @dart=2.9
-
 // DO NOT EDIT. This is code generated via package:gen_lang/generate.dart
 
 import 'dart:async';
@@ -22,7 +20,7 @@ Map<String, LibraryLoader> _deferredLibraries = {
 $deferredLibraries
 };
 
-MessageLookupByLibrary _findExact(String localeName) {
+MessageLookupByLibrary? _findExact(String localeName) {
   switch (localeName) {
 $findExacts
     default:
@@ -56,7 +54,7 @@ bool _messagesExistFor(String locale) {
   }
 }
 
-MessageLookupByLibrary _findGeneratedMessagesFor(String locale) {
+MessageLookupByLibrary? _findGeneratedMessagesFor(String locale) {
   var actualLocale = Intl.verifiedLocale(locale, _messagesExistFor,
       onFailure: (_) => null);
   if (actualLocale == null) return null;
@@ -74,7 +72,7 @@ final _\$$locale = \$$locale();
 class \$$locale extends MessageLookupByLibrary {
   get localeName => '$locale';
   
-  final Map<String, dynamic> messages = {
+  final Map<String, dynamic> messages = <String, dynamic>{
 $message
   };
 }

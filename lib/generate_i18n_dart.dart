@@ -1,11 +1,9 @@
-import 'package:gen_lang/extra_json_file_tool.dart';
-import 'package:gen_lang/extra_json_message_tool.dart';
+import 'extra_json_file_tool.dart';
+import 'extra_json_message_tool.dart';
 
 String generateI18nDart(String getters, String supportedLocale,
     String gettersMap, String className) {
   return '''
-// @dart=2.9
-
 // DO NOT EDIT. This is code generated via package:gen_lang/generate.dart
 
 import 'dart:async';
@@ -18,35 +16,33 @@ import 'messages_all.dart';
 
 class $className {
   static Map<String, Map<String, String>> translations = {};
-  static Locale _locale;
+  static late Locale _locale;
 
-  String overridenTranslation(
-      String key, String languageCode, String countryCode) {
+  String? overridenTranslation(
+      String key, String languageCode, String? countryCode) {
     var languageTag = getLanguageTag(languageCode, countryCode);
     var languageTranslations = translations[languageTag];
     if (languageTranslations != null &&
         languageTranslations.containsKey(key) &&
-        languageTranslations[key].isNotEmpty) {
-      return languageTranslations[key];
+        languageTranslations[key]!.isNotEmpty) {
+      return languageTranslations[key]!;
     }
 
     return null;
   }
 
-  String getLanguageTag(String languageCode, String countryCode) {
-    if (languageCode == null) {
-      return null;
-    }
+  String getLanguageTag(String languageCode, String? countryCode) {
     if (countryCode == null) {
       return languageCode;
     }
+
     return '\$languageCode-\$countryCode';
   }
 
   static const GeneratedLocalizationsDelegate delegate = GeneratedLocalizationsDelegate();
 
   static $className of(BuildContext context) {
-    return Localizations.of<$className>(context, $className);
+    return Localizations.of<$className>(context, $className)!;
   }
   
   static $className load(Locale locale) {
@@ -75,8 +71,8 @@ $supportedLocale
     ];
   }
 
-  LocaleListResolutionCallback listResolution({Locale fallback}) {
-    return (List<Locale> locales, Iterable<Locale> supported) {
+  LocaleListResolutionCallback listResolution({Locale? fallback}) {
+    return (locales, supported) {
       if (locales == null || locales.isEmpty) {
         return fallback ?? supported.first;
       } else {
@@ -85,13 +81,13 @@ $supportedLocale
     };
   }
 
-  LocaleResolutionCallback resolution({Locale fallback}) {
-    return (Locale locale, Iterable<Locale> supported) {
+  LocaleResolutionCallback resolution({Locale? fallback}) {
+    return (locale, supported) {
       return _resolve(locale, fallback, supported);
     };
   }
 
-  Locale _resolve(Locale locale, Locale fallback, Iterable<Locale> supported) {
+  Locale _resolve(Locale? locale, Locale? fallback, Iterable<Locale> supported) {
     if (locale == null || !isSupported(locale)) {
       return fallback ?? supported.first;
     }
@@ -130,7 +126,7 @@ String generateGetterSimpleMessageFunction(String jsonKey, String message) {
   return '''
   String get ${toCamelCase(jsonKey)} {
     var ot = overridenTranslation(
-        '$jsonKey', _locale?.languageCode, _locale?.countryCode);
+        '$jsonKey', _locale.languageCode, _locale.countryCode);
 
     return ot ?? Intl.message("${normalizedJsonMessage(message)}", name: '$jsonKey');
   }
@@ -142,7 +138,7 @@ String generateGetterMessageWithArgsFunction(
   return '''
   String ${toCamelCase(jsonKey)}(${args.toTypedList()}) {
     var ot = overridenTranslation(
-        '$jsonKey', _locale?.languageCode, _locale?.countryCode);
+        '$jsonKey', _locale.languageCode, _locale.countryCode);
 
     return ot ?? Intl.message("${normalizedJsonMessage(message)}", name: '$jsonKey', args: [${args.toSimpleList()}]);
   }
@@ -162,7 +158,7 @@ String generateGetterPluralFunction(String jsonKey, String args, String zero,
   String ${toCamelCase(jsonKey)}($args) {
     // TODO
     var ot = overridenTranslation(
-        '$jsonKey', _locale?.languageCode, _locale?.countryCode);
+        '$jsonKey', _locale.languageCode, _locale.countryCode);
 
     return ot ?? Intl.plural(howMany,
         zero: $zeroArg,
@@ -187,7 +183,7 @@ String generateGetterGenderFunction(
   String ${toCamelCase(jsonKey)}($args) {
     // TODO
     var ot = overridenTranslation(
-        '$jsonKey', _locale?.languageCode, _locale?.countryCode);
+        '$jsonKey', _locale.languageCode, _locale.countryCode);
 
     return ot ?? Intl.gender(targetGender,
         male: $maleArg,
